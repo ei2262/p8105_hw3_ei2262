@@ -15,3 +15,10 @@ library(p8105.datasets)
 data("instacart")
 ```
 
+### How many aisles are there, and which aisles are the most ordered from?
+
+```{r}
+instacart %>% 
+  group_by()
+```
+
