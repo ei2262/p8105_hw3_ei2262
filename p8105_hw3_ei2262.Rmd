@@ -7,6 +7,7 @@ output: github_document
 
 ```{r load_libraries, include = FALSE}
 library(tidyverse)
+library(knitr)
 ```
 
 # Problem 1
@@ -17,8 +18,96 @@ data("instacart")
 
 ### How many aisles are there, and which aisles are the most ordered from?
 
-```{r}
+```{r, include = FALSE}
 instacart %>% 
-  group_by()
+  group_by(aisle) %>% 
+  summarize(nobs = n())
+
+instacart %>% 
+  group_by(aisle, add_to_cart_order) %>% 
+  summarize(nobs = n())
+```
+There are 134 aisles.
+The aisles that were ordered from the most are 
+
+### Plot: Displaying the number of items ordered in each aisle
+
+```{r, eval = FALSE}
+instacart %>% 
+  group_by(aisle, add_to_cart_order) %>% 
+  mutate(
+    orders = aisles > 10000
+  ) 
+```
+
+### Table: Three post popular items in "Baking Ingredients", "Dog Food Care", and "Packaged Vegetable Fruits" aisles
+
+```{r, eval = FALSE}
+instacart %>% 
+  group_by(aisle, add_to_cart_order) %>% 
+  instacart[which(instacart$aisles == "baking ingredients", "dog food care", "packaged vegetable fruits")]
+```
+
+# Problem 2
+
+##### Load, tidy, and wrangle `accel_data.csv`
+```{r}
+accel = read_csv("accel_data.csv") %>% 
+  janitor::clean_names() %>% 
+  mutate(
+    week_day = case_when(
+      day == 'Saturday' | day == 'Sunday' ~ 'weekend',
+      day != 'Saturday' | day != 'Sunday' ~ 'weekday'
+    )) %>% 
+  select(week, day_id, day, week_day, everything()) %>% 
+  mutate(
+    day = as.factor(day)
+  )
+
+print(accel)
+```
+In the `accel` dataset, there are 35 rows and 1444 columns. 1400 columns represent 5 weeks worth of accelerometer data collected on a 63-year-old male with a BMI 25. There are 4 columns that represent each `week`, starting from week 1 to week 5, each day of the week data was collected, which is represented by `day_id` and `day`, and whether the day was a weekday or weekend.
+
+###### Total Activity Over the Day
+```{r}
+accel$total_activity = rowSums(accel[,c(5:1444)])
+
+accel[c("week","day","total_activity")] %>% 
+  kable()
+```
+I created a table that shows the `total_activity` for each day for each week data was collected.
+
+Looking at the table created, there is no apparent trends across the 5 weeks. 
+
+###### Plotting 24-hour activity 
+```{r}
+accel %>% 
+  ggplot(aes(x = total_activity, y = week, color = day)) +
+  geom_point()
+```
+
+# Problem 3
+```{r}
+library(p8105.datasets)
+data("ny_noaa")
+
+
+print(ny_noaa)
+```
+### *Description*
+The `ny_noaa` dataset has 2,595,176 rows and 7 columns. A large majority of observations for the variables `prcp`, `snow`, `snwd`, `tmax`, and `tmin`. Due to this large number of *N/A* observations, it is difficult to obtain interpretable data from the dataset. The `id` variable represents the different weather station IDs. However, the way `id` is currently makes it difficult to know which weather station each observation is related to.
+
+###### Data Cleaning
+```{r}
+library(lubridate)
+ny_noaa %>%
+  mutate(date = as.Date(date, format = "%m-%d-%y")) %>%
+  separate(date,c('year', 'month', 'date'),'-')
+```
+
+```{r}
+ny_noaa %>% 
+  summarise(
+    most_common = mode(snow, na.rm = TRUE))
 ```
 
