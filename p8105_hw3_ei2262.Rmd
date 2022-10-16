@@ -190,7 +190,7 @@ library(p8105.datasets)
 data("ny_noaa")
 ```
 ### *Description*
-The `ny_noaa` dataset has `r nrow(ny_noaa)` rows and `r ncol(ny_noaa)` columns. A large majority of observations for the variables `prcp`, `snow`, `snwd`, `tmax`, and `tmin` are *N/A*. Due to this large number of *N/A* observations, it may be difficult to obtain interpretable measurements from the dataset. The `id` variable represents the different weather station IDs. However, the way `id` is currently makes it difficult to know which weather station each observation is related to.
+The `ny_noaa` dataset has `r nrow(ny_noaa)` rows and `r ncol(ny_noaa)` columns. A large majority of observations for the variables `prcp`, `snow`, `snwd`, `tmax`, and `tmin` are *N/A*. Due to this large number of *N/A* observations, it may be difficult to obtain interpretable measurements from the dataset. The `id` variable represents the different weather station IDs. However, the way `id` is currently labeled makes it difficult to know which weather station each observation is related to.
 
 ##### Data Cleaning
 ```{r}
