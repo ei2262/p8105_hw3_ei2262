@@ -141,14 +141,12 @@ accel = read_csv("accel_data.csv") %>%
   mutate(
     week_day = case_when(
       day == 'Saturday' | day == 'Sunday' ~ 'weekend',
-      day != 'Saturday' | day != 'Sunday' ~ 'weekday'
-    )) %>% 
+      day != 'Saturday' | day != 'Sunday' ~ 'weekday')) %>% 
   pivot_longer(
     cols = starts_with("activity_"),
     names_to = "activity",
     values_to = "counts",
-    names_prefix = "activity_"
-  ) %>% 
+    names_prefix = "activity_") %>% 
   select(week, day_id, day, week_day, everything())%>%
   mutate(day = fct_relevel(day, "Monday", "Tuesday", "Wednesday","Thursday","Friday","Saturday","Sunday")) %>% 
   arrange(week, day)
@@ -160,8 +158,7 @@ In the `accel` dataset, there are `r nrow(accel)` rows and `r ncol(accel)` colum
 accel %>% 
   group_by(day_id, day, week) %>% 
   summarise(
-    total_activity = sum(counts)
-  ) %>% 
+    total_activity = sum(counts)) %>% 
   mutate(day = fct_relevel(day, "Monday", "Tuesday", "Wednesday","Thursday","Friday","Saturday","Sunday")) %>% 
   arrange(week, day) %>% 
   select(week, day, total_activity, day_id) %>% 
@@ -200,15 +197,13 @@ nynoaa_clean = ny_noaa %>%
   separate(date,c('year', 'month', 'date'),'-') %>% 
     mutate(
     month = as.integer(month),
-    month = month.name[month]
-  ) %>% 
+    month = month.name[month]) %>% 
   mutate(
     tmax = as.numeric(tmax)*.1,
     tmin = as.numeric(tmin)*.1,
     prcp = prcp*.1,
     snow = snow*0.1,
-    snwd = snwd*0.1
-  )
+    snwd = snwd*0.1)
 ```
 To clean up the data, the variables `tmax` and `tmin` were converted to numeric variables. `prcp` was converted to mm, which is the unit precipitation is generally measured. `snow` and `snwd` were converted to cm, which is the unit snowfall and snow depth is generally measured. `tmax` represents maximum temperature and `tmin` represents minimum temperature, both in degrees Celsius.
 
