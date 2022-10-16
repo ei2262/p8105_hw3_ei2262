@@ -18,7 +18,6 @@ data("instacart")
 ```
 
 ### How many aisles are there, and which aisles are the most ordered from?
-
 ```{r, include = FALSE}
 instacart %>% 
   group_by(aisle) %>% 
@@ -29,18 +28,14 @@ instacart %>%
   summarize(nobs = n())
 ```
 There are 134 aisles.
-The aisles that were ordered from the most are 
-
 ### Plot: Displaying the number of items ordered in each aisle
 
 ```{r, eval = FALSE}
 instacart %>% 
   group_by(aisle, add_to_cart_order) %>% 
   mutate(
-    orders = aisles > 10000
-  ) 
+    orders = aisles > 10000) 
 ```
-
 ### Table: Three post popular items in "Baking Ingredients", "Dog Food Care", and "Packaged Vegetable Fruits" aisles
 
 ```{r, eval = FALSE}
@@ -181,12 +176,13 @@ Looking at the table created, there is no apparent trends across the 5 weeks. Fo
 accel %>% 
   ggplot(aes(x = activity, y = counts, color = day)) +
   geom_line(alpha = 0.5) + 
+  theme(axis.text.x = element_blank()) +
   labs(title = "24-hour activity time courses for each day",
     x = "minutes",
     y = "activity counts")
 ```
 
-Based on the graph created, there aren't any apparent patterns that appear. Majority of the data lies between 0 - 2500 counts. There are a few days that the participant had counts over 5000. Majority of these days were on a weekday rather than on a weekend. There is a dip in the middle of the graph that represent activity counts less than 2500. It may be worth exploring the isolated drop in activity counts. 
+Based on the graph created, there aren't any apparent patterns that appear. Majority of the data lies between 0 - 2500 counts. There are a few days that the participant had counts over 5000, which were mostly seen on weekdays. The participant may have had more activities that were carried out on these days, such as work or doctor appointments. There is also a dip in the middle of the graph that represents activity counts less than 2500. It may be worth exploring the isolated drop in activity counts. The participant may have been restricted to bedrest due to his health or there may have been error in data collection.
 
 # Problem 3
 ```{r}
@@ -209,12 +205,12 @@ nynoaa_clean = ny_noaa %>%
   mutate(
     tmax = as.numeric(tmax)*.1,
     tmin = as.numeric(tmin)*.1,
-    prcp = prcp*.01,
+    prcp = prcp*.1,
     snow = snow*0.1,
     snwd = snwd*0.1
   )
 ```
-To clean up the data, the variables `tmax` and `tmin` were converted to numeric variables. The variables `prcp`, `snow`, and `snwd` were converted to cm. `prcp` represents precipitation, `snow` represents snowfall, and `snwd` represents snow depth, all in cm. `tmax` represents maximum temperature and `tmin` represents minimum temperature, both in degrees Celsius.
+To clean up the data, the variables `tmax` and `tmin` were converted to numeric variables. `prcp` was converted to mm, which is the unit precipitation is generally measured. `snow` and `snwd` were converted to cm, which is the unit snowfall and snow depth is generally measured. `tmax` represents maximum temperature and `tmin` represents minimum temperature, both in degrees Celsius.
 
 ##### Most Common Observations of Snowfall
 ```{r}
@@ -240,26 +236,23 @@ nynoaa_clean %>%
        x = "Years (1981 - 2010)",
        y = "Average Max Temperature (in degrees C)")
 ```
-From the two-panel plot, we observe that July had higher average temperatures (in degrees C) than January. There is an outlier in July where the average temperature dropped below 20 degrees C, which is much colder than what would be expected in July. 
+From the two-panel plot, we observe that July had higher average maximum temperatures (in degrees C) than January. There is an outlier in July where the average temperature dropped below 20 degrees C, which is much colder than what would be expected in July. Overwall, this the graph represents what would be expected with lower average maximum temperatures in January compared to July.
 
 ##### Two-panel plot showing (i) `tmax` vs `tmin` (ii) distribution of snowfall vlaues greater than 0 and less than 100 separately by year
 
 ```{r}
-tminmax_plot = 
+tmin_tmax_plot =
   nynoaa_clean %>% 
-  ggplot(aes(x=tmin, y=tmax, color = id)) +
-  geom_bar(alpha = 0.5)
+  ggplot(aes(x = tmin, y = tmax, color = year)) +
+  geom_point(alpha = 0.4) +
+  theme(legend.position = "none")
 
 snowfall_plot = 
   nynoaa_clean %>% 
   filter(between(snow,0,100)) %>% 
-  ggplot(aes(x = snow, fill = year) +
-  geom_density(alpha = 0.5)
-
-tmax_date = 
-  nynoaa_clean %>% 
-  ggplot(aes(x=tmin, y=tmax, color = ))
-
-tminmax_plot + snowfall_plot
+  ggplot(aes(x = snow)) +
+  geom_density(aes(color = year), alpha = 0.4, adjust = 10) +
+  theme(legend.position = "bottom")
+  
+tmin_tmax_plot / snowfall_plot 
 ```
-
