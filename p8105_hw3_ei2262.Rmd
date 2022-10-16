@@ -239,7 +239,6 @@ nynoaa_clean %>%
 From the two-panel plot, we observe that July had higher average maximum temperatures (in degrees C) than January. There is an outlier in July where the average temperature dropped below 20 degrees C, which is much colder than what would be expected in July. Overwall, this the graph represents what would be expected with lower average maximum temperatures in January compared to July.
 
 ##### Two-panel plot showing (i) `tmax` vs `tmin` (ii) distribution of snowfall vlaues greater than 0 and less than 100 separately by year
-
 ```{r}
 tmin_tmax_plot =
   nynoaa_clean %>% 
@@ -251,7 +250,7 @@ snowfall_plot =
   nynoaa_clean %>% 
   filter(between(snow,0,100)) %>% 
   ggplot(aes(x = snow)) +
-  geom_density(aes(color = year), alpha = 0.4, adjust = 10) +
+  geom_density(aes(color = year), alpha = 0.4, adjust = 50) +
   theme(legend.position = "bottom")
   
 tmin_tmax_plot / snowfall_plot 
